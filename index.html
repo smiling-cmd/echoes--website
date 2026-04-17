@@ -1,0 +1,508 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Echoes - A Media Experience</title>
+  <link rel="icon" type="image/png" href="media files/echoes-favicon.png" sizes="32x32" />
+  <link rel="apple-touch-icon" type="image/png" href="media files/echoes-favicon.png" sizes="180x180" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #090909;
+      --paper: #090909;
+      --cream: #ff9a56;
+      --rust: #d95b16;
+      --rust-lt: #ff7a1a;
+      --sand: #ffb06f;
+      --white: #ffcf9f;
+      --serif: 'Playfair Display', Georgia, serif;
+      --mono: 'DM Mono', 'Courier New', monospace;
+      --radius: 4px;
+      --gap: clamp(1rem, 3vw, 2.5rem);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--paper);
+      color: var(--sand);
+      font-family: var(--serif);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    img, video, audio { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
+
+    .logo {
+      font-family: var(--serif);
+      font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+      font-style: italic;
+      letter-spacing: 0.04em;
+    }
+    .logo span { color: var(--rust-lt); }
+    .hero-nav {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem var(--gap);
+      color: var(--sand);
+    }
+    .hero-nav nav {
+      display: flex;
+      gap: 1.8rem;
+    }
+    .hero-nav a {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--sand);
+      transition: color 0.2s ease, opacity 0.2s ease;
+      opacity: 0.95;
+    }
+    .hero-nav a:hover { color: var(--rust-lt); }
+    @media (max-width: 640px) {
+      .hero-nav {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 0.9rem;
+      }
+      .hero-nav nav {
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+    }
+
+    .hero {
+      position: relative;
+      min-height: 90vh;
+      overflow: hidden;
+      display: flex;
+      align-items: stretch;
+    }
+    .hero-media {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+    .hero-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 30%;
+      transition: transform 8s ease;
+    }
+    .hero-media:hover img { transform: scale(1.04); }
+    .hero-media::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(7,7,7,0.26) 0%, rgba(7,7,7,0.10) 38%, rgba(7,7,7,0.04) 100%),
+        linear-gradient(180deg, rgba(7,7,7,0.08) 0%, rgba(7,7,7,0.18) 100%);
+    }
+    .hero-copy {
+      position: relative;
+      z-index: 1;
+      color: var(--cream);
+      padding: clamp(2rem, 6vw, 5rem) var(--gap);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      min-height: 90vh;
+      width: min(100%, 680px);
+      background: transparent;
+    }
+    @media (max-width: 700px) {
+      .hero { min-height: auto; }
+      .hero-copy {
+        width: 100%;
+        min-height: auto;
+        padding-top: 6rem;
+      }
+    }
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--rust-lt);
+      margin-bottom: 1rem;
+    }
+    .hero-title {
+      font-size: clamp(2.4rem, 6vw, 4.8rem);
+      font-weight: 700;
+      line-height: 1.05;
+      margin-bottom: 1.5rem;
+      color: var(--white);
+      text-shadow: 0 10px 30px rgba(0,0,0,0.45);
+    }
+    .hero-title em { font-style: italic; color: var(--rust-lt); }
+    .hero-desc {
+      font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+      color: rgba(255, 176, 111, 0.9);
+      max-width: 38ch;
+      margin-bottom: 2.5rem;
+      text-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    }
+    .pill {
+      display: inline-block;
+      padding: 0.55rem 1.4rem;
+      background: var(--rust);
+      color: #f7efe4;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border-radius: var(--radius);
+      transition: background 0.2s, transform 0.15s;
+      align-self: flex-start;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.25);
+    }
+    .pill:hover { background: var(--rust-lt); transform: translateY(-2px); }
+
+    .section {
+      padding: clamp(3rem, 8vw, 7rem) var(--gap);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .section-label {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--rust);
+      margin-bottom: 0.6rem;
+    }
+    .section-title {
+      font-size: clamp(1.6rem, 4vw, 2.8rem);
+      font-weight: 700;
+      margin-bottom: var(--gap);
+      line-height: 1.15;
+    }
+    hr.rule {
+      border: none;
+      border-top: 1px solid var(--sand);
+      opacity: 0.4;
+      margin: clamp(2rem, 5vw, 4rem) 0;
+    }
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+    }
+    .photo-grid .cell {
+      position: relative;
+      overflow: visible;
+      border-radius: var(--radius);
+      background: rgba(18, 18, 18, 0.96);
+      border: 1px solid rgba(255, 122, 26, 0.34);
+      padding: 0.5rem;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.32);
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+    }
+    .photo-grid .cell img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      transition: transform 0.7s ease;
+      border-radius: calc(var(--radius) - 1px);
+    }
+    .photo-grid .cell:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 22px 52px rgba(255, 122, 26, 0.14);
+    }
+    .photo-grid .cell:hover img {
+      transform: scale(1.02);
+    }
+    .photo-grid figcaption {
+      position: static;
+      font-family: var(--mono);
+      font-size: 0.64rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--sand);
+      padding-top: 0.75rem;
+    }
+    #gallery.section {
+      max-width: 1360px;
+      padding-top: clamp(2rem, 5vw, 4rem);
+    }
+    #gallery .section-title {
+      margin-bottom: 1rem;
+      max-width: 12ch;
+    }
+    @media (max-width: 800px) {
+      .photo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 640px) {
+      .photo-grid { grid-template-columns: 1fr; }
+    }
+
+    .video-section { background: #0c0c0c; color: var(--cream); }
+    .video-section .section { padding-bottom: clamp(3rem, 8vw, 7rem); }
+    .video-section .section-title { color: var(--white); }
+    .video-section .section-label { color: var(--rust-lt); }
+    .video-wrapper {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: #111;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+    }
+    .video-wrapper video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .video-meta {
+      margin-top: 1.2rem;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1rem;
+      font-family: var(--mono);
+    }
+    .video-meta dt {
+      color: var(--sand);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 0.35rem;
+    }
+    .video-meta dd { color: var(--white); }
+    @media (max-width: 700px) {
+      .video-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    .audio-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+    }
+    .audio-card {
+      background: rgba(14, 14, 14, 0.98);
+      border: 1px solid rgba(255, 122, 26, 0.26);
+      border-radius: var(--radius);
+      padding: 1.1rem;
+    }
+    .track-num {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.16em;
+      color: var(--rust);
+      margin-bottom: 0.65rem;
+      text-transform: uppercase;
+    }
+    .track-title {
+      font-size: 1.25rem;
+      margin-bottom: 0.2rem;
+    }
+    .track-artist {
+      color: var(--sand);
+      margin-bottom: 1rem;
+    }
+    .waveform {
+      display: flex;
+      align-items: end;
+      gap: 0.2rem;
+      height: 48px;
+      margin-bottom: 1rem;
+    }
+    .waveform span {
+      flex: 1;
+      background: linear-gradient(180deg, var(--rust-lt), var(--rust));
+      border-radius: 999px;
+      animation: wave 1.6s ease-in-out infinite alternate;
+      transform-origin: bottom;
+    }
+    .waveform span:nth-child(2n) { animation-delay: 0.2s; }
+    .waveform span:nth-child(3n) { animation-delay: 0.35s; }
+    .waveform span:nth-child(4n) { animation-delay: 0.5s; }
+    @keyframes wave {
+      from { transform: scaleY(0.4); }
+      to { transform: scaleY(1); }
+    }
+    audio { width: 100%; }
+    @media (max-width: 900px) {
+      .audio-grid { grid-template-columns: 1fr; }
+    }
+
+    .quote-break {
+      background: linear-gradient(135deg, #180d05 0%, #2b1307 60%, #461b08 100%);
+      color: var(--white);
+      padding: clamp(2.5rem, 6vw, 5rem) var(--gap);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .quote-text {
+      font-size: clamp(1.4rem, 3vw, 2.4rem);
+      line-height: 1.2;
+      max-width: 18ch;
+      margin: 0 auto 1rem;
+    }
+    .quote-author {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      opacity: 0.75;
+      text-transform: uppercase;
+    }
+
+    footer {
+      background: #050505;
+      color: var(--sand);
+      padding: 2rem var(--gap);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <section class="hero">
+    <div class="hero-nav">
+      <div class="logo"><em>Ech<span>o</span>es</em></div>
+      <nav>
+        <a href="#gallery">Gallery</a>
+        <a href="#film">Film</a>
+        <a href="#sound">Sound</a>
+      </nav>
+    </div>
+    <div class="hero-media">
+      <img src="media files/mountain-landscape.png" alt="Mountain landscape" loading="eager" />
+    </div>
+    <div class="hero-copy">
+      <h1 class="hero-title">Where <em>light</em><br>meets silence</h1>
+      <p class="hero-desc">A curated journey through landscape photography, documentary film, and field recordings collected across three continents.</p>
+      <a href="#gallery" class="pill">Explore the collection</a>
+    </div>
+  </section>
+
+  <div id="gallery" class="section">
+    <p class="section-label">01 - Photography</p>
+    <h2 class="section-title">Light &amp; Terrain</h2>
+
+    <div class="photo-grid">
+      <figure class="cell cell-a">
+        <img src="media files/forest-valley-oregon.jpg" alt="Vast forest valley with morning mist" loading="lazy" />
+        <figcaption>Forest Valley, Oregon</figcaption>
+      </figure>
+      <figure class="cell cell-b">
+        <img src="media files/green-mountains-vermont.jpg" alt="Aerial view of green mountains" loading="lazy" />
+        <figcaption>Green Mountains, Vermont</figcaption>
+      </figure>
+      <figure class="cell cell-c">
+        <img src="media files/sahara-dunes-morocco.jpg" alt="Desert sand dunes at sunset" loading="lazy" />
+        <figcaption>Sahara Dunes, Morocco</figcaption>
+      </figure>
+      <figure class="cell cell-d">
+        <img src="media files/cornish-coast-uk.jpg" alt="Rocky coastline with waves" loading="lazy" />
+        <figcaption>Cornish Coast, UK</figcaption>
+      </figure>
+      <figure class="cell cell-e">
+        <img src="media files/swiss-alps-switzerland.jpg" alt="Snow-capped alpine peaks" loading="lazy" />
+        <figcaption>Swiss Alps, Switzerland</figcaption>
+      </figure>
+      <figure class="cell cell-f">
+        <img src="media files/alpine-ridge-dusk.jpg" alt="Mountain landscape at golden hour" loading="lazy" />
+        <figcaption>Alpine Ridge at Dusk</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <hr class="rule" style="margin: 0 clamp(1rem,3vw,2.5rem);" />
+
+  <section id="film" class="video-section">
+    <div class="section">
+      <p class="section-label">02 - Film</p>
+      <h2 class="section-title">The Living Landscape</h2>
+      <div class="video-wrapper">
+        <video controls preload="metadata" playsinline poster="media files/mountain-landscape.png" aria-label="Documentary short: The Living Landscape">
+          <source src="media files/video.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </div>
+      <dl class="video-meta">
+        <div><dt>Duration</dt><dd>Approx. 30 sec</dd></div>
+        <div><dt>Director</dt><dd>Amara Osei</dd></div>
+        <div><dt>Format</dt><dd>4K / HDR</dd></div>
+        <div><dt>Year</dt><dd>2024</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <blockquote class="quote-break">
+    <p class="quote-text">"In every walk with nature, one receives far more than he seeks."</p>
+    <cite class="quote-author">John Muir</cite>
+  </blockquote>
+
+  <div id="sound" class="section">
+    <p class="section-label">03 - Sound</p>
+    <h2 class="section-title">Field Recordings</h2>
+
+    <div class="audio-grid">
+      <div class="audio-card">
+        <p class="track-num">Track 01</p>
+        <h3 class="track-title">Dawn Chorus</h3>
+        <p class="track-artist">Daintree Rainforest, AU - 4:32</p>
+        <div class="waveform" aria-hidden="true">
+          <span style="height:40%"></span><span style="height:70%"></span><span style="height:50%"></span><span style="height:90%"></span><span style="height:60%"></span><span style="height:45%"></span><span style="height:80%"></span><span style="height:55%"></span><span style="height:100%"></span><span style="height:65%"></span>
+        </div>
+        <audio controls preload="none" aria-label="Dawn Chorus field recording">
+          <source src="media files/bbc_rainforest_nhu0500513.mp3" type="audio/mpeg" />
+        </audio>
+      </div>
+      <div class="audio-card">
+        <p class="track-num">Track 02</p>
+        <h3 class="track-title">River Passage</h3>
+        <p class="track-artist">Iguazu, Argentina - 6:14</p>
+        <div class="waveform" aria-hidden="true">
+          <span style="height:55%"></span><span style="height:80%"></span><span style="height:65%"></span><span style="height:45%"></span><span style="height:90%"></span><span style="height:70%"></span><span style="height:50%"></span><span style="height:85%"></span><span style="height:75%"></span><span style="height:60%"></span>
+        </div>
+        <audio controls preload="none" aria-label="River Passage field recording">
+          <source src="media files/157844__felixblume__water-flowing-in-a-small-river-aquatic-sound.wav" type="audio/wav" />
+        </audio>
+      </div>
+      <div class="audio-card">
+        <p class="track-num">Track 03</p>
+        <h3 class="track-title">Sahara Winds</h3>
+        <p class="track-artist">Merzouga, Morocco - 3:48</p>
+        <div class="waveform" aria-hidden="true">
+          <span style="height:30%"></span><span style="height:60%"></span><span style="height:85%"></span><span style="height:45%"></span><span style="height:70%"></span><span style="height:55%"></span><span style="height:95%"></span><span style="height:40%"></span><span style="height:65%"></span><span style="height:80%"></span>
+        </div>
+        <audio controls preload="none" aria-label="Sahara Winds field recording">
+          <source src="media files/sahara-winds.mp3" type="audio/mpeg" />
+        </audio>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="logo"><em>Echoes</em></div>
+    <p>© 2024 Echoes Media. All rights reserved.</p>
+  </footer>
+</body>
+</html>
